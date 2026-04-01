@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎙️ EchoClass - Transcriptor Local con IA</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎙️ EchoClass</h1>
+            <p class="subtitle">Transcripción en tiempo real y resumen con IA</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <button id="startMic" class="btn btn-primary">
+                    <span class="icon">🎤</span>
+                    Grabar Micrófono
+                </button>
+                <button id="startSystem" class="btn btn-primary">
+                    <span class="icon">💻</span>
+                    Grabar Audio Sistema
+                </button>
+                <button id="stop" class="btn btn-danger" disabled>
+                    <span class="icon">⏹️</span>
+                    Detener
+                </button>
+            </div>
+
+            <div class="status-bar">
+                <span id="status" class="status">⚪ Listo</span>
+                <span id="timer" class="timer">00:00:00</span>
+            </div>
+        </div>
+
+        <div class="transcription-container">
+            <div class="transcription-header">
+                <h2>📄 Transcripción en Tiempo Real</h2>
+                <div class="char-count">
+                    <span id="charCount">0</span> caracteres
+                </div>
+            </div>
+            <div id="transcription" class="transcription-box">
+                <p class="placeholder">La transcripción aparecerá aquí en tiempo real...</p>
+            </div>
+        </div>
+
+        <div class="export-controls">
+            <button id="summarize" class="btn btn-success" disabled>
+                <span class="icon">🤖</span>
+                Generar Resumen con Ollama
+            </button>
+            <button id="downloadRaw" class="btn btn-secondary" disabled>
+                <span class="icon">📥</span>
+                Descargar Transcripción Raw
+            </button>
+            <button id="clear" class="btn btn-warning">
+                <span class="icon">🗑️</span>
+                Limpiar
+            </button>
+        </div>
+
+        <div id="summaryContainer" class="summary-container" style="display: none;">
+            <div class="summary-header">
+                <h2>📋 Resumen Generado</h2>
+                <button id="downloadSummary" class="btn btn-small">
+                    <span class="icon">💾</span>
+                    Descargar Resumen
+                </button>
+            </div>
+            <div id="summary" class="summary-box"></div>
+        </div>
+
+        <div id="loadingModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="spinner"></div>
+                <p id="loadingText">Generando resumen con Ollama...</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>💻 Ejecutándose localmente | 🔒 Privado y Seguro</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
