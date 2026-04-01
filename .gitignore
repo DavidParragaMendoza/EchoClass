@@ -58,7 +58,6 @@ models/
 *.ogg
 
 # Exported files
-*.md
 *.txt
 transcripciones/
 resumenes/
