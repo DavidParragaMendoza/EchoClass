@@ -1,72 +1,103 @@
 @echo off
-echo ========================================
-echo  Instalador - Transcriptor de Clases
-echo ========================================
+chcp 65001 >nul
+title EchoClass - Instalador
+
+echo.
+echo  ╔═══════════════════════════════════════════╗
+echo  ║         🎙️ EchoClass - Instalador         ║
+echo  ╚═══════════════════════════════════════════╝
 echo.
 
-echo [1/5] Verificando Python...
-python --version
+REM Verificar Python
+echo [1/4] Verificando Python...
+python --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ERROR: Python no esta instalado
-    echo Descargalo desde: https://www.python.org/downloads/
+    echo ❌ Python no encontrado
+    echo.
+    echo    Descarga Python desde: https://www.python.org/downloads/
+    echo    IMPORTANTE: Marca "Add Python to PATH" durante la instalación
+    echo.
     pause
     exit /b 1
 )
-
+python --version
+echo ✅ Python encontrado
 echo.
-echo [2/5] Verificando FFmpeg...
+
+REM Verificar FFmpeg
+echo [2/4] Verificando FFmpeg...
 ffmpeg -version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ADVERTENCIA: FFmpeg no esta instalado
-    echo Instala con: winget install FFmpeg
-    echo O descarga desde: https://ffmpeg.org/download.html
-    pause
-)
-
-echo.
-echo [3/5] Creando entorno virtual...
-cd backend
-if exist venv (
-    echo Entorno virtual ya existe, omitiendo...
+    echo ⚠️ FFmpeg no encontrado. Intentando instalar con winget...
+    winget install FFmpeg --accept-package-agreements --accept-source-agreements
+    if %errorlevel% neq 0 (
+        echo.
+        echo ❌ No se pudo instalar FFmpeg automáticamente
+        echo    Instala manualmente: winget install FFmpeg
+        echo    O descarga desde: https://ffmpeg.org/download.html
+        echo.
+        pause
+    )
 ) else (
+    echo ✅ FFmpeg encontrado
+)
+echo.
+
+REM Crear entorno virtual e instalar dependencias
+echo [3/4] Configurando entorno Python...
+if exist venv (
+    echo    Entorno virtual existente, actualizando...
+) else (
+    echo    Creando entorno virtual...
     python -m venv venv
 )
 
-echo.
-echo [4/5] Activando entorno e instalando dependencias...
 call venv\Scripts\activate.bat
-pip install --upgrade pip
-pip install -r requirements.txt
+echo    Instalando dependencias...
+python -m pip install --upgrade pip --quiet
+python -m pip install -r requirements.txt --quiet
 
 if %errorlevel% neq 0 (
-    echo ERROR: Fallo la instalacion de dependencias
+    echo ❌ Error al instalar dependencias
     pause
     exit /b 1
 )
-
+echo ✅ Dependencias instaladas
 echo.
-echo [5/5] Verificando Ollama...
+
+REM Verificar/Instalar Ollama
+echo [4/4] Verificando Ollama...
 ollama --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ADVERTENCIA: Ollama no esta instalado
-    echo Descargalo desde: https://ollama.ai
+    echo ⚠️ Ollama no encontrado
     echo.
-    echo Despues de instalar, ejecuta:
-    echo   ollama pull llama3
-    echo   ollama serve
+    echo    Descarga Ollama desde: https://ollama.ai
+    echo    Después de instalar, ejecuta:
+    echo      ollama pull qwen2.5:7b
+    echo.
     pause
+) else (
+    echo ✅ Ollama encontrado
+    echo    Verificando modelo qwen2.5:7b...
+    ollama list 2>nul | findstr "qwen2.5:7b" >nul
+    if %errorlevel% neq 0 (
+        echo    Descargando modelo qwen2.5:7b (puede tomar unos minutos)...
+        ollama pull qwen2.5:7b
+    ) else (
+        echo ✅ Modelo qwen2.5:7b disponible
+    )
 )
 
 echo.
-echo ========================================
-echo  Instalacion Completada!
-echo ========================================
+echo  ╔═══════════════════════════════════════════╗
+echo  ║      ✅ Instalación Completada            ║
+echo  ╚═══════════════════════════════════════════╝
 echo.
-echo Para iniciar el servidor:
-echo   1. Ejecuta: start_server.bat
-echo   2. Abre: frontend\index.html en tu navegador
+echo  Para iniciar EchoClass:
+echo    1. Ejecuta: start.bat
+echo    2. Abre: http://localhost:8000
 echo.
-echo Asegurate de que Ollama este ejecutandose:
-echo   ollama serve
+echo  Asegúrate de que Ollama esté ejecutándose:
+echo    ollama serve
 echo.
 pause

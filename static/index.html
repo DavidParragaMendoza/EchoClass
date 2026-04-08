@@ -19,10 +19,6 @@
                     <span class="icon">🎤</span>
                     Grabar Micrófono
                 </button>
-                <!-- <button id="startSystem" class="btn btn-primary">
-                    <span class="icon">💻</span>
-                    Grabar Audio Sistema
-                </button> -->
                 <button id="stop" class="btn btn-danger" disabled>
                     <span class="icon">⏹️</span>
                     Detener
@@ -32,6 +28,18 @@
             <div class="status-bar">
                 <span id="status" class="status">⚪ Listo</span>
                 <span id="timer" class="timer">00:00:00</span>
+            </div>
+        </div>
+
+        <!-- Área para pegar texto de prueba -->
+        <div class="paste-container">
+            <div class="paste-header">
+                <h3>📋 Pegar Texto de Prueba</h3>
+                <button id="togglePaste" class="btn btn-small btn-secondary">Mostrar</button>
+            </div>
+            <div id="pasteArea" class="paste-area" style="display: none;">
+                <textarea id="pasteText" placeholder="Pega aquí una transcripción para probar el resumen..."></textarea>
+                <button id="usePastedText" class="btn btn-primary">Usar este texto</button>
             </div>
         </div>
 
@@ -60,6 +68,20 @@
                 <span class="icon">🗑️</span>
                 Limpiar
             </button>
+        </div>
+
+        <!-- Progress de chunking -->
+        <div id="progressContainer" class="progress-container" style="display: none;">
+            <div class="progress-header">
+                <h3>⏳ Procesando Resumen</h3>
+            </div>
+            <div class="progress-content">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+                </div>
+                <p id="progressText" class="progress-text">Iniciando...</p>
+                <div id="progressLog" class="progress-log"></div>
+            </div>
         </div>
 
         <div id="summaryContainer" class="summary-container" style="display: none;">
