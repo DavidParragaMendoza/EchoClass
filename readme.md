@@ -75,6 +75,7 @@ model: str = "qwen2.5:7b"  # modelo por defecto
 | Error de Ollama | Ejecuta `ollama serve` en otra terminal |
 | No detecta micrófono | Abre desde http://localhost:8000 (no file://) |
 | Resumen lento | Normal: 30-60 seg en CPU |
+| Error `cublas64_12.dll` | Instala/actualiza drivers NVIDIA + CUDA runtime. EchoClass hará fallback automático a CPU si CUDA no está disponible. |
 
 ---
 
