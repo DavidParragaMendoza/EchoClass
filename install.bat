@@ -19,6 +19,15 @@ if "%TERM_PROGRAM%"=="vscode" (
 
 REM Verificar Python
 echo [1/4] Verificando Python...
+echo    --- Versiones de Python detectadas en el sistema ---
+py --list 2>nul
+if %errorlevel% neq 0 (
+    echo    ^(Lanzador 'py' no encontrado, mostrando ruta del ejecutable actual...^)
+    where python 2>nul
+)
+echo    ----------------------------------------------------
+echo.
+
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
     echo ⚠️ Python no encontrado. Intentando instalar Python 3.12 con winget...
