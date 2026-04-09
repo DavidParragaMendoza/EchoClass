@@ -22,7 +22,7 @@ echo [1/4] Verificando Python...
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
     echo ⚠️ Python no encontrado. Intentando instalar Python 3.12 con winget...
-    winget install --id Python.Python.3.12 -e --accept-package-agreements --accept-source-agreements
+    winget install --id Python.Python.3.12 -e --accept-package-agreements --accept-source-agreements --override "PrependPath=1"
     if %errorlevel% neq 0 (
         echo ❌ No se pudo instalar Python automáticamente.
         echo.
