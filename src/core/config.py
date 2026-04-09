@@ -13,8 +13,7 @@ class WhisperConfig:
     language: str = "es"
     cpu_threads: int = 4
     num_workers: int = 2
-    compute_type: str = "float16"  # máxima precisión en GPU NVIDIA
-    device: str = "cuda"
+    compute_type: str = "float32"  # máxima precisión en CPU
 
 
 @dataclass
@@ -49,8 +48,7 @@ class Settings:
                 language=os.getenv("WHISPER_LANGUAGE", "es"),
                 cpu_threads=int(os.getenv("WHISPER_CPU_THREADS", "4")),
                 num_workers=int(os.getenv("WHISPER_NUM_WORKERS", "2")),
-                compute_type=os.getenv("WHISPER_COMPUTE_TYPE", "float16"),
-                device=os.getenv("WHISPER_DEVICE", "cuda"),
+                compute_type=os.getenv("WHISPER_COMPUTE_TYPE", "float32"),
             ),
             ollama=OllamaConfig(
                 model=os.getenv("OLLAMA_MODEL", "qwen2.5:7b"),

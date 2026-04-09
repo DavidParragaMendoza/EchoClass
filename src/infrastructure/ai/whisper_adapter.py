@@ -34,8 +34,7 @@ class WhisperAdapter(TranscriptionPort):
         model_size: Optional[str] = None,
         language: Optional[str] = None,
         cpu_threads: Optional[int] = None,
-        compute_type: Optional[str] = None,
-        device: Optional[str] = None
+        compute_type: Optional[str] = None
     ):
         """
         Inicializa el adaptador de Whisper
@@ -44,8 +43,7 @@ class WhisperAdapter(TranscriptionPort):
             model_size: Tamaño del modelo (tiny, base, small, medium, large)
             language: Idioma para transcripción
             cpu_threads: Número de hilos de CPU
-            compute_type: Tipo de computación (int8, float16, etc.)
-            device: Dispositivo de inferencia (cpu, cuda)
+            compute_type: Tipo de computación (int8, float32, etc.)
         """
         config = settings.whisper
         
@@ -53,7 +51,6 @@ class WhisperAdapter(TranscriptionPort):
         self.language = language or config.language
         self.cpu_threads = cpu_threads or config.cpu_threads
         self.compute_type = compute_type or config.compute_type
-        self.device = device or config.device
         self.num_workers = config.num_workers
         
         self._model: Optional[WhisperModel] = None
@@ -68,47 +65,20 @@ class WhisperAdapter(TranscriptionPort):
         
         try:
             logger.info(f"⏳ Cargando modelo Whisper '{self.model_size}'...")
-            self._model = self._build_model(device=self.device, compute_type=self.compute_type)
+            
+            self._model = WhisperModel(
+                self.model_size,
+                device="cpu",
+                compute_type=self.compute_type,
+                cpu_threads=self.cpu_threads,
+                num_workers=self.num_workers
+            )
             
             logger.info(f"✅ Modelo '{self.model_size}' cargado exitosamente")
             
         except Exception as e:
-            if self.device == "cuda" and self._is_cuda_library_error(e):
-                logger.warning(
-                    "⚠️ No se pudieron cargar librerías CUDA. "
-                    "Cambiando automáticamente a CPU (compute_type='int8')."
-                )
-                try:
-                    self._model = self._build_model(device="cpu", compute_type="int8")
-                    logger.info(f"✅ Modelo '{self.model_size}' cargado en CPU como fallback")
-                    return
-                except Exception as fallback_error:
-                    logger.error(f"❌ Error al cargar modelo en fallback CPU: {fallback_error}")
-                    raise TranscriptionError(
-                        "No se pudo cargar el modelo Whisper con CUDA ni con fallback CPU: "
-                        f"{fallback_error}"
-                    )
-            
             logger.error(f"❌ Error al cargar modelo: {e}")
             raise TranscriptionError(f"No se pudo cargar el modelo Whisper: {e}")
-
-    def _build_model(self, device: str, compute_type: str) -> WhisperModel:
-        return WhisperModel(
-            self.model_size,
-            device=device,
-            compute_type=compute_type,
-            cpu_threads=self.cpu_threads,
-            num_workers=self.num_workers
-        )
-
-    def _is_cuda_library_error(self, error: Exception) -> bool:
-        error_text = str(error).lower()
-        has_cuda_token = any(token in error_text for token in ("cuda", "cublas", "cudnn"))
-        has_missing_token = any(
-            token in error_text
-            for token in ("not found", "cannot be loaded", "failed to load")
-        )
-        return has_cuda_token and has_missing_token
     
     def unload_model(self) -> None:
         """Libera el modelo de memoria"""
