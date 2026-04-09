@@ -21,13 +21,24 @@ REM Verificar Python
 echo [1/4] Verificando Python...
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ❌ Python no encontrado
-    echo.
-    echo    Descarga Python desde: https://www.python.org/downloads/
-    echo    IMPORTANTE: Marca "Add Python to PATH" durante la instalación
-    echo.
-    pause
-    exit /b 1
+    echo ⚠️ Python no encontrado. Intentando instalar Python 3.12 con winget...
+    winget install --id Python.Python.3.12 -e --accept-package-agreements --accept-source-agreements
+    if %errorlevel% neq 0 (
+        echo ❌ No se pudo instalar Python automáticamente.
+        echo.
+        echo    Descarga e instala manualmente desde: https://www.python.org/downloads/
+        echo    IMPORTANTE: Marca "Add Python to PATH" durante la instalación
+        echo.
+        pause
+        exit /b 1
+    ) else (
+        echo ✅ Python 3.12 instalado con éxito.
+        echo    ⚠️ IMPORTANTE: Necesitas reiniciar la terminal para actualizar las variables de entorno.
+        echo    Cierra esta ventana y vuelve a ejecutar install.bat
+        echo.
+        pause
+        exit /b 0
+    )
 )
 
 python -c "import sys; sys.exit(0 if (3, 9) <= sys.version_info < (3, 14) else 1)" >nul 2>&1
@@ -36,8 +47,9 @@ if %errorlevel% neq 0 (
     python --version
     echo.
     echo    EchoClass requiere Python 3.9 a 3.13 ^(3.14 es muy reciente y da problemas^)
-    echo    Recomendado: Python 3.11 o 3.12
-    echo    Descarga: https://www.python.org/downloads/
+    echo    Recomendado: Python 3.12
+    echo    Puedes desinstalar tu version actual e instalar la recomendada con:
+    echo      winget install --id Python.Python.3.12 -e
     echo.
     pause
     exit /b 1
