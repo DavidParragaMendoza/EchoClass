@@ -49,7 +49,7 @@ Abre **http://localhost:8000** en tu navegador.
 
 Edita `src/core/config.py`:
 ```python
-model_size: str = "large"      # máxima precisión
+model_size: str = "medium"     # equilibrio precisión/velocidad en CPU
 compute_type: str = "float32"  # máxima precisión en CPU
 ```
 

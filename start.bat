@@ -18,7 +18,7 @@ REM Activar entorno
 call venv\Scripts\activate.bat
 
 REM Forzar ejecución de Whisper en CPU (sin CUDA)
-set "WHISPER_MODEL=large"
+set "WHISPER_MODEL=medium"
 set "WHISPER_COMPUTE_TYPE=float32"
 
 echo  ✅ Servidor iniciando en http://localhost:8000

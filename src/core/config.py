@@ -9,7 +9,7 @@ from typing import Optional
 @dataclass
 class WhisperConfig:
     """Configuración del modelo Whisper para transcripción"""
-    model_size: str = "large"  # tiny, base, small, medium, large
+    model_size: str = "medium"  # tiny, base, small, medium, large
     language: str = "es"
     cpu_threads: int = 4
     num_workers: int = 2
@@ -44,7 +44,7 @@ class Settings:
         """Carga configuración desde variables de entorno"""
         return cls(
             whisper=WhisperConfig(
-                model_size=os.getenv("WHISPER_MODEL", "large"),
+                model_size=os.getenv("WHISPER_MODEL", "medium"),
                 language=os.getenv("WHISPER_LANGUAGE", "es"),
                 cpu_threads=int(os.getenv("WHISPER_CPU_THREADS", "4")),
                 num_workers=int(os.getenv("WHISPER_NUM_WORKERS", "2")),
