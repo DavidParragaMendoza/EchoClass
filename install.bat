@@ -153,26 +153,29 @@ echo.
 REM Verificar/Instalar Ollama
 echo [4/4] Verificando Ollama...
 ollama --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ⚠️ Ollama no encontrado
-    echo.
-    echo    Descarga Ollama desde: https://ollama.ai
-    echo    Después de instalar, ejecuta:
-    echo      ollama pull qwen2.5:7b
-    echo.
-    pause
-) else (
-    echo ✅ Ollama encontrado
-    echo    Verificando modelo qwen2.5:7b...
-    ollama list 2>nul | findstr "qwen2.5:7b" >nul
-    if %errorlevel% neq 0 (
-        echo    Descargando modelo qwen2.5:7b (puede tomar unos minutos)...
-        ollama pull qwen2.5:7b
-    ) else (
-        echo ✅ Modelo qwen2.5:7b disponible
-    )
-)
+if %errorlevel% neq 0 goto :ollama_not_found
 
+echo ✅ Ollama encontrado
+echo    Verificando modelo qwen2.5:7b...
+ollama list 2>nul | findstr "qwen2.5:7b" >nul
+if %errorlevel% neq 0 (
+    echo    Descargando modelo qwen2.5:7b ^(puede tomar unos minutos^)...
+    ollama pull qwen2.5:7b
+) else (
+    echo ✅ Modelo qwen2.5:7b disponible
+)
+goto :finish_install
+
+:ollama_not_found
+echo ⚠️ Ollama no encontrado
+echo.
+echo    Descarga Ollama desde: https://ollama.ai
+echo    Después de instalar, ejecuta:
+echo      ollama pull qwen2.5:7b
+echo.
+pause
+
+:finish_install
 echo.
 echo  ╔═══════════════════════════════════════════╗
 echo  ║      ✅ Instalación Completada            ║
