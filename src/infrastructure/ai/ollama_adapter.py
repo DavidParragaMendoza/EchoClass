@@ -403,26 +403,23 @@ No inventes contenido ni repitas ideas.
 
 Devuelve Markdown con esta estructura:
 
-# 📚 Título de la Clase
+## Resumen:
+[1-2 líneas con la idea central de la clase]
 
-## 🎯 Tema Principal
-[2-3 líneas]
+## Claves:
+- [Punto clave 1]
+- [Punto clave 2]
+- [Punto clave 3]
 
-## 📝 Conceptos Clave
-- **Concepto**: Explicación breve
+## Decisión/impacto:
+[Conclusión principal, implicación práctica o decisión tomada]
 
-## 🔍 Desarrollo de Contenido
-[Ordenado por subtemas]
-
-## ✅ Tareas Pendientes
-[Si las hay]
-
-## 💡 Puntos Destacados
-[Ideas clave]
+## Siguiente paso:
+[Acción concreta recomendada para continuar]
 
 Máximo ~350 palabras."""
         else:
-            prompt = f"""Combina estas secciones en un resumen intermedio por subtemas.
+            prompt = f"""Combina estas secciones en un resumen intermedio orientado a síntesis ejecutiva.
 No inventes datos.
 
 {combined}
@@ -430,9 +427,10 @@ No inventes datos.
 ---
 
 Devuelve Markdown breve con:
-- Subtemas principales
-- Conceptos clave por subtema
-- Tareas/acciones mencionadas
+- Resumen (idea central)
+- Claves (3-5 puntos)
+- Decisión/impacto
+- Siguiente paso
 
 Máximo ~220 palabras."""
         
@@ -492,29 +490,20 @@ Máximo ~220 palabras."""
 
 A continuación se presenta la transcripción de una clase. Genera un resumen estructurado en formato Markdown:
 
-# 📚 Título de la Clase
-[Determina un título descriptivo]
+## Resumen:
+[1-2 líneas con la idea central de la clase]
 
-## 🎯 Tema Principal
-[Resumen breve del tema central en 2-3 líneas]
+## Claves:
+- [Punto clave 1]
+- [Punto clave 2]
+- [Punto clave 3]
+[Incluye de 3 a 5 puntos concretos]
 
-## 📝 Conceptos Clave
-- **Concepto 1**: Explicación breve
-- **Concepto 2**: Explicación breve
-[Lista todos los conceptos importantes]
+## Decisión/impacto:
+[Conclusión principal, implicación práctica o decisión tomada]
 
-## 🔍 Desarrollo de Contenido
-[Resumen detallado organizando los temas en orden lógico]
-
-## ✅ Tareas y Acciones Pendientes
-- [ ] Tarea 1
-[Si se mencionaron tareas o ejercicios]
-
-## 💡 Puntos Destacados
-[Ideas clave que el estudiante debe recordar]
-
-## 📖 Referencias Mencionadas
-[Si se mencionaron libros, artículos o recursos]
+## Siguiente paso:
+[Acción concreta recomendada para continuar]
 
 ---
 
@@ -529,4 +518,5 @@ A continuación se presenta la transcripción de una clase. Genera un resumen es
 - Mantén la estructura Markdown
 - Si no hay información para alguna sección, omítela
 - Usa lenguaje claro y académico
-- Resalta conceptos técnicos en **negrita**"""
+- Resalta conceptos técnicos en **negrita**
+- No organices por subtemas como eje principal"""
