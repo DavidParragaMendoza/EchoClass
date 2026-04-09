@@ -6,7 +6,7 @@ Transcribe tus clases en tiempo real y genera resúmenes con IA. 100% local y pr
 
 ### Requisitos Previos
 - **Windows 10/11**
-- **Python 3.9+** → [Descargar](https://www.python.org/downloads/)
+- **Python 3.9 - 3.13** (recomendado 3.11/3.12) → [Descargar](https://www.python.org/downloads/)
 - **Ollama** → [Descargar](https://ollama.ai)
 
 ### Instalar

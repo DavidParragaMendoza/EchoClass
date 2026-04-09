@@ -4,9 +4,18 @@ title EchoClass - Instalador
 
 echo.
 echo  ╔═══════════════════════════════════════════╗
-echo  ║         🎙️ EchoClass - Instalador         ║
+echo  ║         🎙️ EchoClass - Instalador        ║
 echo  ╚═══════════════════════════════════════════╝
 echo.
+
+if "%TERM_PROGRAM%"=="vscode" (
+    echo ⚠️ ADVERTENCIA: Estas ejecutando este instalador dentro de la terminal de VS Code.
+    echo    Esto puede causar problemas al actualizar variables de entorno ^(como PATH para FFmpeg^).
+    echo    Se recomienda encarecidamente cerrar esta terminal y ejecutar "install.bat"
+    echo    desde una ventana externa normal de CMD o PowerShell.
+    echo.
+    pause
+)
 
 REM Verificar Python
 echo [1/4] Verificando Python...
@@ -20,6 +29,19 @@ if %errorlevel% neq 0 (
     pause
     exit /b 1
 )
+
+python -c "import sys; sys.exit(0 if (3, 9) <= sys.version_info < (3, 14) else 1)" >nul 2>&1
+if %errorlevel% neq 0 (
+    echo ❌ Version de Python no compatible
+    python --version
+    echo.
+    echo    EchoClass requiere Python 3.9 a 3.13 ^(3.14 es muy reciente y da problemas^)
+    echo    Recomendado: Python 3.11 o 3.12
+    echo    Descarga: https://www.python.org/downloads/
+    echo.
+    pause
+    exit /b 1
+)
 python --version
 echo ✅ Python encontrado
 echo.
@@ -29,14 +51,24 @@ echo [2/4] Verificando FFmpeg...
 ffmpeg -version >nul 2>&1
 if %errorlevel% neq 0 (
     echo ⚠️ FFmpeg no encontrado. Intentando instalar con winget...
-    winget install FFmpeg --accept-package-agreements --accept-source-agreements
+    winget install --id Gyan.FFmpeg -e --accept-package-agreements --accept-source-agreements
+    ffmpeg -version >nul 2>&1
     if %errorlevel% neq 0 (
-        echo.
-        echo ❌ No se pudo instalar FFmpeg automáticamente
-        echo    Instala manualmente: winget install FFmpeg
-        echo    O descarga desde: https://ffmpeg.org/download.html
-        echo.
-        pause
+        winget list --id Gyan.FFmpeg -e >nul 2>&1
+        if %errorlevel% equ 0 (
+            echo ✅ FFmpeg instalado con winget
+            echo    Reinicia la terminal para que PATH se actualice
+        ) else (
+            echo.
+            echo ❌ No se pudo instalar FFmpeg automáticamente
+            echo    Instala manualmente: winget install --id Gyan.FFmpeg -e
+            echo    O descarga desde: https://ffmpeg.org/download.html
+            echo.
+            pause
+            exit /b 1
+        )
+    ) else (
+        echo ✅ FFmpeg encontrado
     )
 ) else (
     echo ✅ FFmpeg encontrado
@@ -50,9 +82,20 @@ if exist venv (
 ) else (
     echo    Creando entorno virtual...
     python -m venv venv
+    if %errorlevel% neq 0 (
+        echo ❌ Error al crear el entorno virtual
+        echo    Verifica que Python sea 3.9-3.13 y vuelve a intentar
+        pause
+        exit /b 1
+    )
 )
 
 call venv\Scripts\activate.bat
+if %errorlevel% neq 0 (
+    echo ❌ No se pudo activar el entorno virtual
+    pause
+    exit /b 1
+)
 echo    Instalando dependencias...
 python -m pip install --upgrade pip --quiet
 python -m pip install -r requirements.txt --quiet
