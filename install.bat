@@ -48,7 +48,9 @@ if %errorlevel% neq 0 (
     echo.
     echo    EchoClass requiere Python 3.9 a 3.13 ^(3.14 es muy reciente y da problemas^)
     echo    Recomendado: Python 3.12
-    echo    Puedes desinstalar tu version actual e instalar la recomendada con:
+    echo    Puedes desinstalar tu version actual desde Configuración/Aplicaciones o usando:
+    echo      winget uninstall Python.Python.3.14
+    echo    Y luego instalar la versión recomendada con:
     echo      winget install --id Python.Python.3.12 -e
     echo.
     pause
