@@ -49,7 +49,9 @@ Abre **http://localhost:8000** en tu navegador.
 
 Edita `src/core/config.py`:
 ```python
-model_size: str = "base"  # tiny (rápido), base (recomendado), small (preciso)
+model_size: str = "large"      # máxima precisión
+compute_type: str = "float16"  # ideal para GPU NVIDIA
+device: str = "cuda"           # usa GPU
 ```
 
 ### Cambiar modelo de resúmenes

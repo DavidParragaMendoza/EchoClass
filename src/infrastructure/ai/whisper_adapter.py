@@ -34,7 +34,8 @@ class WhisperAdapter(TranscriptionPort):
         model_size: Optional[str] = None,
         language: Optional[str] = None,
         cpu_threads: Optional[int] = None,
-        compute_type: Optional[str] = None
+        compute_type: Optional[str] = None,
+        device: Optional[str] = None
     ):
         """
         Inicializa el adaptador de Whisper
@@ -44,6 +45,7 @@ class WhisperAdapter(TranscriptionPort):
             language: Idioma para transcripción
             cpu_threads: Número de hilos de CPU
             compute_type: Tipo de computación (int8, float16, etc.)
+            device: Dispositivo de inferencia (cpu, cuda)
         """
         config = settings.whisper
         
@@ -51,6 +53,7 @@ class WhisperAdapter(TranscriptionPort):
         self.language = language or config.language
         self.cpu_threads = cpu_threads or config.cpu_threads
         self.compute_type = compute_type or config.compute_type
+        self.device = device or config.device
         self.num_workers = config.num_workers
         
         self._model: Optional[WhisperModel] = None
@@ -68,7 +71,7 @@ class WhisperAdapter(TranscriptionPort):
             
             self._model = WhisperModel(
                 self.model_size,
-                device="cpu",
+                device=self.device,
                 compute_type=self.compute_type,
                 cpu_threads=self.cpu_threads,
                 num_workers=self.num_workers
