@@ -1,6 +1,9 @@
 @echo off
 chcp 65001 >nul
 title EchoClass - Instalador
+cd /d "%~dp0"
+
+set "REQ_FILE=%~dp0requirements.txt"
 
 echo.
 echo  ╔═══════════════════════════════════════════╗
@@ -100,6 +103,15 @@ echo.
 
 REM Crear entorno virtual e instalar dependencias
 echo [3/4] Configurando entorno Python...
+if not exist "%REQ_FILE%" (
+    echo ❌ No se encontro requirements.txt en la carpeta del instalador:
+    echo    "%~dp0"
+    echo.
+    echo    Descarga/copía el proyecto completo y vuelve a ejecutar install.bat.
+    pause
+    exit /b 1
+)
+
 if exist venv (
     if not exist venv\Scripts\activate.bat (
         echo    ⚠️ Entorno virtual incompleto/corrupto detectado. Limpiando...
@@ -128,7 +140,7 @@ if %errorlevel% neq 0 (
 )
 echo    Instalando dependencias...
 python -m pip install --upgrade pip --quiet
-python -m pip install -r requirements.txt --quiet
+python -m pip install -r "%REQ_FILE%" --quiet
 
 if %errorlevel% neq 0 (
     echo ❌ Error al instalar dependencias
