@@ -49,8 +49,9 @@ Abre **http://localhost:8000** en tu navegador.
 
 Edita `src/core/config.py`:
 ```python
-model_size: str = "medium"     # equilibrio precisión/velocidad en CPU
-compute_type: str = "float32"  # máxima precisión en CPU
+model_size: str = "large-v3"   # máxima calidad de transcripción
+device: str = "cuda"           # usar GPU NVIDIA
+compute_type: str = "float16"  # recomendado para CUDA
 ```
 
 ### Cambiar modelo de resúmenes

@@ -17,9 +17,10 @@ if not exist venv (
 REM Activar entorno
 call venv\Scripts\activate.bat
 
-REM Forzar ejecución de Whisper en CPU (sin CUDA)
-set "WHISPER_MODEL=medium"
-set "WHISPER_COMPUTE_TYPE=float32"
+REM Forzar máxima calidad de Whisper en GPU CUDA
+set "WHISPER_DEVICE=cuda"
+set "WHISPER_MODEL=large-v3"
+set "WHISPER_COMPUTE_TYPE=float16"
 
 echo  ✅ Servidor iniciando en http://localhost:8000
 echo  📝 Presiona Ctrl+C para detener
