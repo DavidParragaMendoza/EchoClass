@@ -9,6 +9,8 @@ class TranscriptionApp {
         this.timerInterval = null;
         this.recordingInterval = null;
         this.RECORDING_DURATION = 8000;
+        this.SERVER_URL = 'https://contortively-sledlike-marcella.ngrok-free.dev'.replace(/\/+$/, '');
+        this.WS_URL = this.SERVER_URL.replace(/^http/, 'ws');
         this.currentMode = null;
         
         this.initElements();
@@ -91,7 +93,7 @@ class TranscriptionApp {
     }
 
     connectWebSocket() {
-        this.ws = new WebSocket('ws://localhost:8000/ws');
+        this.ws = new WebSocket(`${this.WS_URL}/ws`);
         
         this.ws.onopen = () => {
             console.log('✅ Conexión WebSocket establecida');
@@ -315,7 +317,7 @@ class TranscriptionApp {
         this.summarizeBtn.disabled = true;
 
         try {
-            const response = await fetch('http://localhost:8000/summarize/stream', {
+            const response = await fetch(`${this.SERVER_URL}/summarize/stream`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -417,7 +419,7 @@ class TranscriptionApp {
         this.loadingText.textContent = 'Generando resumen con Ollama...';
 
         try {
-            const response = await fetch('http://localhost:8000/summarize', {
+            const response = await fetch(`${this.SERVER_URL}/summarize`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
