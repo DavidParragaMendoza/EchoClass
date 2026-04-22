@@ -9,11 +9,12 @@ from typing import Optional
 @dataclass
 class WhisperConfig:
     """Configuración del modelo Whisper para transcripción"""
-    model_size: str = "medium"  # tiny, base, small, medium, large
+    model_size: str = "large-v3"  # máxima calidad de transcripción
     language: str = "es"
+    device: str = "cuda"  # usa GPU NVIDIA por defecto
     cpu_threads: int = 4
     num_workers: int = 2
-    compute_type: str = "float32"  # máxima precisión en CPU
+    compute_type: str = "float16"  # alta precisión y rendimiento en CUDA
 
 
 @dataclass
@@ -44,11 +45,12 @@ class Settings:
         """Carga configuración desde variables de entorno"""
         return cls(
             whisper=WhisperConfig(
-                model_size=os.getenv("WHISPER_MODEL", "medium"),
+                model_size=os.getenv("WHISPER_MODEL", "large-v3"),
                 language=os.getenv("WHISPER_LANGUAGE", "es"),
+                device=os.getenv("WHISPER_DEVICE", "cuda"),
                 cpu_threads=int(os.getenv("WHISPER_CPU_THREADS", "4")),
                 num_workers=int(os.getenv("WHISPER_NUM_WORKERS", "2")),
-                compute_type=os.getenv("WHISPER_COMPUTE_TYPE", "float32"),
+                compute_type=os.getenv("WHISPER_COMPUTE_TYPE", "float16"),
             ),
             ollama=OllamaConfig(
                 model=os.getenv("OLLAMA_MODEL", "qwen2.5:7b"),

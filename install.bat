@@ -118,8 +118,26 @@ if exist venv (
         rmdir /s /q venv
         echo    Creando entorno virtual...
         python -m venv venv
+        if %errorlevel% neq 0 (
+            echo ❌ Error al crear el entorno virtual
+            pause
+            exit /b 1
+        )
     ) else (
-        echo    Entorno virtual existente, actualizando...
+        venv\Scripts\python.exe --version >nul 2>&1
+        if %errorlevel% neq 0 (
+            echo    ⚠️ Entorno virtual incompatible detectado ^(Python movido/actualizado^). Recreando...
+            rmdir /s /q venv
+            echo    Creando entorno virtual...
+            python -m venv venv
+            if %errorlevel% neq 0 (
+                echo ❌ Error al recrear el entorno virtual
+                pause
+                exit /b 1
+            )
+        ) else (
+            echo    Entorno virtual existente, actualizando...
+        )
     )
 ) else (
     echo    Creando entorno virtual...
