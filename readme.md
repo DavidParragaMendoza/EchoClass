@@ -102,7 +102,6 @@ EchoClass/
 - **LinkedIn:** [David Parraga Mendoza](https://www.linkedin.com/in/davidparragamendoza/)
 - **X:** [@DavidParragaMen](https://x.com/DavidParragaMen)
 
+- **LinkedIn:** [Deivy Prudente](https://www.linkedin.com/in/deivy-prudente-a3bb31389/)
 ---
-
-MIT License
 
