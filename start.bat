@@ -53,10 +53,10 @@ if %errorlevel% neq 0 (
     )
 )
 
-REM Forzar máxima calidad de Whisper en GPU CUDA
-set "WHISPER_DEVICE=cuda"
-set "WHISPER_MODEL=large-v3"
-set "WHISPER_COMPUTE_TYPE=float16"
+REM Si deseas sobrescribir la configuración de config.py mediante variables de entorno, puedes descomentar estas líneas:
+REM set "WHISPER_DEVICE=cuda"
+REM set "WHISPER_MODEL=small"
+REM set "WHISPER_COMPUTE_TYPE=float16"
 
 echo  ✅ Servidor iniciando en http://localhost:8000
 echo  📝 Presiona Ctrl+C para detener

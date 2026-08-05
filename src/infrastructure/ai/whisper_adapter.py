@@ -64,7 +64,7 @@ class WhisperAdapter(TranscriptionPort):
         )
     
     def load_model(self) -> None:
-        """Carga el modelo Whisper en memoria"""
+        """Carga el modelo Whisper en memoria con fallback automático a CPU si CUDA no está disponible"""
         if self._model is not None:
             logger.debug("Modelo ya está cargado")
             return
@@ -83,9 +83,30 @@ class WhisperAdapter(TranscriptionPort):
                 num_workers=self.num_workers
             )
             
-            logger.info(f"✅ Modelo '{self.model_size}' cargado exitosamente")
+            logger.info(f"✅ Modelo '{self.model_size}' cargado exitosamente en device='{self.device}'")
             
         except Exception as e:
+            if self.device == "cuda":
+                logger.warning(
+                    f"⚠️ No se pudo inicializar CUDA (device='cuda', compute_type='{self.compute_type}'): {e}. "
+                    "Reintentando con fallback automático a CPU (device='cpu', compute_type='int8')..."
+                )
+                try:
+                    self.device = "cpu"
+                    self.compute_type = "int8"
+                    self._model = WhisperModel(
+                        self.model_size,
+                        device="cpu",
+                        compute_type="int8",
+                        cpu_threads=self.cpu_threads,
+                        num_workers=self.num_workers
+                    )
+                    logger.info(f"✅ Fallback exitoso: Modelo '{self.model_size}' cargado en CPU (compute_type='int8')")
+                    return
+                except Exception as cpu_err:
+                    logger.error(f"❌ Error al cargar modelo en CPU tras fallback: {cpu_err}")
+                    raise TranscriptionError(f"No se pudo cargar el modelo Whisper ni en CUDA ni en CPU: {cpu_err}")
+            
             logger.error(f"❌ Error al cargar modelo: {e}")
             raise TranscriptionError(f"No se pudo cargar el modelo Whisper: {e}")
     
@@ -106,12 +127,13 @@ class WhisperAdapter(TranscriptionPort):
         """Indica si el modelo está cargado"""
         return self._model is not None
     
-    async def transcribe(self, audio_data: bytes) -> Optional[str]:
+    async def transcribe(self, audio_data: bytes, language: Optional[str] = None) -> Optional[str]:
         """
         Transcribe datos de audio a texto
         
         Args:
             audio_data: Datos de audio en formato WebM/Opus
+            language: Código de idioma opcional (ej: 'es', 'en', 'zh', 'ru')
         
         Returns:
             Texto transcrito o None si no se detectó voz
@@ -126,6 +148,8 @@ class WhisperAdapter(TranscriptionPort):
         
         tmp_webm_path = None
         tmp_wav_path = None
+        
+        target_language = language or self.language
         
         try:
             # Guardar audio temporal
@@ -142,7 +166,7 @@ class WhisperAdapter(TranscriptionPort):
             # Transcribir
             segments, info = self._model.transcribe(
                 tmp_wav_path,
-                language=self.language,
+                language=target_language,
                 beam_size=8,
                 best_of=5,
                 temperature=0.0,

@@ -411,3 +411,125 @@ footer {
         font-size: 1.8em;
     }
 }
+
+/* Estilos específicos para la sección Practicar */
+.practice-card {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-size: 1.05em;
+}
+
+.input-control, .select-control {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1.05em;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.input-control:focus, .select-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+.language-info-box {
+    background: rgba(37, 99, 235, 0.1);
+    border-left: 4px solid var(--primary-color);
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin-top: 10px;
+    font-size: 0.95em;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.language-info-box strong {
+    color: var(--text-primary);
+}
+
+.score-card {
+    background: var(--bg-lighter);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+    margin-top: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.score-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    font-size: 2.2em;
+    font-weight: 800;
+    margin: 15px 0;
+    color: white;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+.score-badge.score-10 { background: linear-gradient(135deg, #10b981, #059669); }
+.score-badge.score-9  { background: linear-gradient(135deg, #10b981, #047857); }
+.score-badge.score-8  { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.score-badge.score-7  { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+.score-badge.score-6  { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.score-badge.score-5  { background: linear-gradient(135deg, #f97316, #ea580c); }
+.score-badge.score-low{ background: linear-gradient(135deg, #ef4444, #b91c1c); }
+
+.comparison-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+    text-align: left;
+}
+
+@media (max-width: 600px) {
+    .comparison-box {
+        grid-template-columns: 1fr;
+    }
+}
+
+.comparison-item {
+    background: var(--bg-dark);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.comparison-item .label {
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.comparison-item .value {
+    font-size: 1.15em;
+    font-weight: 600;
+    color: var(--text-primary);
+    word-break: break-word;
+}
+

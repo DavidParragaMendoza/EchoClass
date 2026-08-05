@@ -49,12 +49,13 @@ class TranscriptionService:
         """Indica si el servicio está listo para transcribir"""
         return self._adapter.is_loaded()
     
-    async def transcribe_audio(self, audio_data: bytes) -> Optional[str]:
+    async def transcribe_audio(self, audio_data: bytes, language: Optional[str] = None) -> Optional[str]:
         """
         Transcribe datos de audio a texto
         
         Args:
             audio_data: Datos de audio en formato WebM/Opus
+            language: Código de idioma opcional (ej: 'es', 'en', 'zh', 'ru')
         
         Returns:
             Texto transcrito o None si no se detectó voz
@@ -63,7 +64,7 @@ class TranscriptionService:
             logger.warning("⚠️ Modelo no cargado, cargando automáticamente...")
             self.initialize()
         
-        return await self._adapter.transcribe(audio_data)
+        return await self._adapter.transcribe(audio_data, language=language)
     
     def free_memory(self) -> None:
         """Libera el modelo de memoria temporalmente"""

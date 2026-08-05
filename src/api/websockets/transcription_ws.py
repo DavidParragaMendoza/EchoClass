@@ -33,49 +33,65 @@ class TranscriptionWebSocket:
         
         consecutive_errors = 0
         
+        current_language = None
+        
         try:
             while True:
-                # Recibir audio
-                audio_data = await websocket.receive_bytes()
+                message = await websocket.receive()
                 
-                if len(audio_data) > 0:
-                    logger.info(f"📥 Recibido audio: {len(audio_data)} bytes")
-                    
+                # Configuración enviada como JSON de texto
+                if "text" in message and message["text"]:
                     try:
-                        # Transcribir
-                        text = await self._transcription_service.transcribe_audio(audio_data)
+                        import json
+                        data = json.loads(message["text"])
+                        if data.get("type") == "config":
+                            current_language = data.get("language")
+                            logger.info(f"🌐 Idioma configurado en WebSocket: '{current_language}'")
+                    except Exception as parse_err:
+                        logger.warning(f"⚠️ Error al procesar mensaje de configuración: {parse_err}")
+                    continue
+                
+                # Audio enviado en formato binario
+                if "bytes" in message and message["bytes"]:
+                    audio_data = message["bytes"]
+                    if len(audio_data) > 0:
+                        logger.info(f"📥 Recibido audio ({len(audio_data)} bytes), idioma='{current_language}'")
                         
-                        if text and text.strip():
-                            await websocket.send_json({
-                                "type": "transcription",
-                                "text": text
-                            })
-                            logger.info(f"📝 Transcrito: {text[:50]}...")
-                            consecutive_errors = 0
-                        else:
-                            logger.debug("⚠️ No se detectó voz en este chunk")
+                        try:
+                            # Transcribir con idioma dinámico
+                            text = await self._transcription_service.transcribe_audio(audio_data, language=current_language)
                             
-                    except TranscriptionError as e:
-                        consecutive_errors += 1
-                        logger.error(f"❌ Error de transcripción ({consecutive_errors}): {e}")
-                        
-                        if consecutive_errors >= self.MAX_CONSECUTIVE_ERRORS:
-                            await websocket.send_json({
-                                "type": "warning",
-                                "message": "Problemas al procesar audio. Intenta hablar más claro."
-                            })
-                            consecutive_errors = 0
+                            if text and text.strip():
+                                await websocket.send_json({
+                                    "type": "transcription",
+                                    "text": text
+                                })
+                                logger.info(f"📝 Transcrito: {text[:50]}...")
+                                consecutive_errors = 0
+                            else:
+                                logger.debug("⚠️ No se detectó voz en este chunk")
+                                
+                        except TranscriptionError as e:
+                            consecutive_errors += 1
+                            logger.error(f"❌ Error de transcripción ({consecutive_errors}): {e}")
                             
-                    except Exception as e:
-                        consecutive_errors += 1
-                        logger.error(f"❌ Error inesperado ({consecutive_errors}): {e}")
-                        
-                        if consecutive_errors >= self.MAX_CONSECUTIVE_ERRORS:
-                            await websocket.send_json({
-                                "type": "warning",
-                                "message": "Error al procesar audio. Verificando servicio..."
-                            })
-                            consecutive_errors = 0
+                            if consecutive_errors >= self.MAX_CONSECUTIVE_ERRORS:
+                                await websocket.send_json({
+                                    "type": "warning",
+                                    "message": "Problemas al procesar audio. Intenta hablar más claro."
+                                })
+                                consecutive_errors = 0
+                                
+                        except Exception as e:
+                            consecutive_errors += 1
+                            logger.error(f"❌ Error inesperado ({consecutive_errors}): {e}")
+                            
+                            if consecutive_errors >= self.MAX_CONSECUTIVE_ERRORS:
+                                await websocket.send_json({
+                                    "type": "warning",
+                                    "message": "Error al procesar audio. Verificando servicio..."
+                                })
+                                consecutive_errors = 0
                             
         except WebSocketDisconnect:
             logger.info("🔌 Cliente WebSocket desconectado")

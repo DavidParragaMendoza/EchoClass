@@ -22,12 +22,13 @@ class TranscriptionPort(ABC):
         pass
     
     @abstractmethod
-    async def transcribe(self, audio_data: bytes) -> Optional[str]:
+    async def transcribe(self, audio_data: bytes, language: Optional[str] = None) -> Optional[str]:
         """
         Transcribe datos de audio a texto
         
         Args:
             audio_data: Datos de audio en formato bytes (WebM/Opus)
+            language: Código de idioma opcional (ej: 'es', 'en', 'zh', 'ru')
         
         Returns:
             Texto transcrito o None si no se detectó voz

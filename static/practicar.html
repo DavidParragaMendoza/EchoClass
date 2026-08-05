@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Practicar Pronunciación - EchoClass</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <h1>A Practicar Pronunciación</h1>
+                    <p class="subtitle">Evalúa tu vocalización con IA y recibe una calificación del 1 al 10</p>
+                </div>
+                <a href="index.html" class="btn btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+                    <span class="icon">⬅️</span> Transcripción en Vivo
+                </a>
+            </div>
+        </header>
+
+        <!-- Configuración de Práctica -->
+        <div class="practice-card">
+            <!-- 0. Palabra u Oración a Practicar -->
+            <div class="form-group">
+                <label for="targetWord">0. Palabra o frase a practicar:</label>
+                <input 
+                    type="text" 
+                    id="targetWord" 
+                    class="input-control" 
+                    placeholder="Ejemplo: hola, hello, oi, how are you..."
+                    value="hello"
+                    autocomplete="off"
+                >
+            </div>
+
+            <!-- 2. Selección de Idioma y Nota de Precisión de Whisper -->
+            <div class="form-group">
+                <label for="languageSelect">2. Selecciona el idioma de práctica:</label>
+                <select id="languageSelect" class="select-control">
+                    <option value="es">🇪🇸 Español</option>
+                    <option value="en" selected>🇬🇧 Inglés</option>
+                    <option value="zh">🇨🇳 Chino (Mandarín)</option>
+                    <option value="ru">🇷🇺 Ruso</option>
+                </select>
+                
+                <!-- Nota de Precisión de Whisper -->
+                <div id="languageInfoNote" class="language-info-box">
+                    <!-- Rellenado dinámicamente con JS -->
+                </div>
+            </div>
+
+            <!-- 1. Botones de Grabación -->
+            <div class="controls" style="margin: 20px 0 0 0; padding: 20px 0 0 0; border: none; border-top: 1px solid var(--border-color); background: transparent;">
+                <label style="font-weight: 600; display: block; margin-bottom: 12px;">1. Grabar pronunciación:</label>
+                <div class="control-group" style="justify-content: flex-start;">
+                    <button id="startRecordBtn" class="btn btn-primary">
+                        <span class="icon">🎤</span> Grabar Pronunciación
+                    </button>
+                    <button id="stopRecordBtn" class="btn btn-danger" disabled>
+                        <span class="icon">⏹️</span> Detener
+                    </button>
+                </div>
+                <div class="status-bar" style="margin-top: 15px;">
+                    <span id="status" class="status">⚪ Listo para empezar</span>
+                    <span id="timer" class="timer">00:00:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Resultado de Transcripción -->
+        <div class="transcription-container">
+            <div class="transcription-header">
+                <h2>3. Transcripción de lo que Whisper escuchó</h2>
+            </div>
+            <div id="transcriptionEl" class="transcription-box" style="min-height: 90px;">
+                <p class="placeholder">Presiona "Grabar Pronunciación" y habla al micrófono...</p>
+            </div>
+        </div>
+
+        <!-- 4. Comparación y Calificación (1 a 10) -->
+        <div id="evaluationCard" class="score-card" style="display: none;">
+            <h2>4. Resultado de la Evaluación</h2>
+            <p class="subtitle" style="margin-top: 5px;">Calificación calculada según la rúbrica oficial</p>
+
+            <div id="scoreBadge" class="score-badge score-10">
+                10/10
+            </div>
+
+            <h3 id="scoreTitle" style="font-size: 1.6em; margin-bottom: 8px;">¡Excelente!</h3>
+            <p id="scoreDescription" style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 20px auto; font-size: 1.05em; line-height: 1.5;">
+                Tu pronunciación coincide perfectamente con la palabra esperada.
+            </p>
+
+            <div class="comparison-box">
+                <div class="comparison-item">
+                    <div class="label">🎯 Palabra Esperada</div>
+                    <div id="expectedTextDisplay" class="value">-</div>
+                </div>
+                <div class="comparison-item">
+                    <div class="label">🎙️ Lo que dijiste (Whisper)</div>
+                    <div id="transcribedTextDisplay" class="value">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>💻 EchoClass | Práctica de Pronunciación con Whisper IA</p>
+    </footer>
+
+    <script src="practicar.js"></script>
+</body>
+</html>

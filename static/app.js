@@ -8,9 +8,12 @@ class TranscriptionApp {
         this.startTime = null;
         this.timerInterval = null;
         this.recordingInterval = null;
-        this.RECORDING_DURATION = 8000;
-        this.SERVER_URL = 'https://contortively-sledlike-marcella.ngrok-free.dev'.replace(/\/+$/, '');
-        this.WS_URL = this.SERVER_URL.replace(/^http/, 'ws');
+        // URL servidor ngrok remoto (descomentar si se requiere apuntar a un servidor externo fijo):
+        // this.SERVER_URL = 'https://contortively-sledlike-marcella.ngrok-free.dev'.replace(/\/+$/, '');
+
+        // Configuración dinámica (funciona automáticamente en http://localhost:8000, red local o ngrok):
+        this.SERVER_URL = window.location.origin;
+        this.WS_URL = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host;
         this.currentMode = null;
         
         this.initElements();

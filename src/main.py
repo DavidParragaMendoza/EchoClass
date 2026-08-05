@@ -69,6 +69,7 @@ def create_app() -> FastAPI:
     
     # WebSocket
     app.websocket("/ws")(websocket_endpoint)
+    app.websocket("/ws/transcribe")(websocket_endpoint)
     
     # Archivos estáticos (frontend)
     static_path = Path(__file__).parent.parent / "static"
