@@ -8,12 +8,16 @@ class TranscriptionApp {
         this.startTime = null;
         this.timerInterval = null;
         this.recordingInterval = null;
-        // URL servidor ngrok remoto (descomentar si se requiere apuntar a un servidor externo fijo):
-        // this.SERVER_URL = 'https://contortively-sledlike-marcella.ngrok-free.dev'.replace(/\/+$/, '');
-
-        // Configuración dinámica (funciona automáticamente en http://localhost:8000, red local o ngrok):
-        this.SERVER_URL = window.location.origin;
-        this.WS_URL = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host;
+        // Configuración del servidor remoto (RunPod).
+        // Editar static/config.js con la URL del pod cuando esté activo.
+        // Si window.ECHOCLASS_CONFIG no está definido, cae en window.location (modo local).
+        const _cfg = window.ECHOCLASS_CONFIG || {};
+        this.SERVER_URL = _cfg.serverUrl
+            ? _cfg.serverUrl.replace(/\/+$/, '')
+            : window.location.origin;
+        this.WS_URL = _cfg.wsUrl
+            ? _cfg.wsUrl.replace(/\/+$/, '')
+            : (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host;
         this.currentMode = null;
         
         this.initElements();

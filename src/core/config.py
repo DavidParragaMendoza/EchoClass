@@ -26,12 +26,28 @@ class WhisperConfig:
       - Para GPU (cuda): "float16", "int8_float16", "float32"
       - Para CPU       : "int8" (recomendado para velocidad en CPU), "float32"
     """
-    model_size: str = "small"  # Modelo por defecto (si estás en CPU sin GPU, te recomendamos cambiar a "small" o "base")
+    model_size: str = "large-v3"  # Modelo por defecto (si estás en CPU sin GPU, te recomendamos cambiar a "small" o "base")
     language: str = "es"
     device: str = "cuda"  # Intenta GPU NVIDIA por defecto con fallback automático a CPU si no se detecta CUDA
     cpu_threads: int = 4
     num_workers: int = 2
     compute_type: str = "float16"  # Se ajustará a "int8" automáticamente si se cambia a CPU en el fallback
+
+@dataclass
+class RunPodConfig:
+    """
+    Configuración del pod remoto de RunPod.
+
+    Cómo obtener los valores:
+      1. Crea un pod en https://www.runpod.io/console/pods
+      2. Copia la URL desde: Dashboard → tu pod → Connect → HTTP Service
+         Formato esperado: https://XXXXXXXX-8000.proxy.runpod.net
+      3. Pégalas como variables de entorno o en un archivo .env
+
+    Si pod_url está vacío, el servidor corre en modo local.
+    """
+    pod_url: str = ""       # URL pública del pod, ej: https://abc123-8000.proxy.runpod.net
+    api_key: str = ""       # API key del pod (opcional, si se configura auth en RunPod)
 
 
 @dataclass
@@ -56,6 +72,7 @@ class Settings:
     whisper: WhisperConfig = field(default_factory=WhisperConfig)
     ollama: OllamaConfig = field(default_factory=OllamaConfig)
     server: ServerConfig = field(default_factory=ServerConfig)
+    runpod: RunPodConfig = field(default_factory=RunPodConfig)
     
     @classmethod
     def from_env(cls) -> "Settings":
@@ -78,6 +95,10 @@ class Settings:
                 host=os.getenv("SERVER_HOST", "0.0.0.0"),
                 port=int(os.getenv("SERVER_PORT", "8000")),
                 debug=os.getenv("DEBUG", "false").lower() == "true",
+            ),
+            runpod=RunPodConfig(
+                pod_url=os.getenv("RUNPOD_POD_URL", ""),
+                api_key=os.getenv("RUNPOD_API_KEY", ""),
             ),
         )
 

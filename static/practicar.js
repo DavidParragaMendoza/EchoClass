@@ -9,8 +9,16 @@ class PracticeApp {
         this.recordingInterval = null;
         this.accumulatedTranscription = '';
 
-        this.SERVER_URL = window.location.origin;
-        this.WS_URL = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host;
+        // Configuración del servidor remoto (RunPod).
+        // Editar static/config.js con la URL del pod cuando esté activo.
+        // Si window.ECHOCLASS_CONFIG no está definido, cae en window.location (modo local).
+        const _cfg = window.ECHOCLASS_CONFIG || {};
+        this.SERVER_URL = _cfg.serverUrl
+            ? _cfg.serverUrl.replace(/\/+$/, '')
+            : window.location.origin;
+        this.WS_URL = _cfg.wsUrl
+            ? _cfg.wsUrl.replace(/\/+$/, '')
+            : (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host;
 
         this.languageNotes = {
             es: 'ℹ️ <strong>Precisión de Whisper en Español:</strong> <strong>Muy Alta (~95%+)</strong>. Excelente reconocimiento fonético y sintáctico.',
