@@ -14,6 +14,6 @@
  * "REEMPLAZAR" — la app mostrará un error claro de conexión.
  */
 window.ECHOCLASS_CONFIG = {
-  serverUrl: "https://REEMPLAZAR-8000.proxy.runpod.net",
-  wsUrl:     "wss://REEMPLAZAR-8000.proxy.runpod.net"
+  serverUrl: "https://e2fe3do06ya5xt-8000.proxy.runpod.net",
+  wsUrl:     "wss://e2fe3do06ya5xt-8000.proxy.runpod.net"
 };
