@@ -117,7 +117,7 @@ class TranscriptionApp {
     }
 
     connectWebSocket() {
-        this.ws = new WebSocket(`${this.WS_URL}/ws`);
+        this.ws = new WebSocket(this.WS_URL);
         
         this.ws.onopen = () => {
             console.log('✅ Conexión WebSocket establecida');
