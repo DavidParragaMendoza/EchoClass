@@ -13,10 +13,10 @@ class PracticeApp {
         // Editar static/config.js con la URL del pod cuando esté activo.
         // Si window.ECHOCLASS_CONFIG no está definido, cae en window.location (modo local).
         const _cfg = window.ECHOCLASS_CONFIG || {};
-        this.SERVER_URL = _cfg.serverUrl
+        this.SERVER_URL = (_cfg.serverUrl || '')
             ? _cfg.serverUrl.replace(/\/+$/, '')
             : window.location.origin;
-        this.WS_URL = _cfg.wsUrl
+        this.WS_URL = (_cfg.wsUrl || '')
             ? _cfg.wsUrl.replace(/\/+$/, '')
             : (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host;
 
