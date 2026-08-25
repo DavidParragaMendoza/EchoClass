@@ -54,6 +54,9 @@ class TranscriptionApp {
         this.progressBar = document.getElementById('progressBar');
         this.progressText = document.getElementById('progressText');
         this.progressLog = document.getElementById('progressLog');
+
+        // Selector de idioma de transcripción
+        this.langSelect = document.getElementById('transcriptionLang');
     }
 
     initEventListeners() {
@@ -72,6 +75,19 @@ class TranscriptionApp {
         // Eventos para pegar texto
         this.togglePasteBtn.addEventListener('click', () => this.togglePasteArea());
         this.usePastedTextBtn.addEventListener('click', () => this.usePastedText());
+
+        // Cambio de idioma en tiempo real
+        if (this.langSelect) {
+            this.langSelect.addEventListener('change', () => this.sendLanguageConfig());
+        }
+    }
+
+    sendLanguageConfig() {
+        if (this.ws && this.ws.readyState === WebSocket.OPEN && this.langSelect) {
+            const lang = this.langSelect.value;
+            this.ws.send(JSON.stringify({ type: 'config', language: lang }));
+            console.log(`🌐 Idioma enviado al servidor: ${lang}`);
+        }
     }
 
     togglePasteArea() {
@@ -106,6 +122,8 @@ class TranscriptionApp {
         this.ws.onopen = () => {
             console.log('✅ Conexión WebSocket establecida');
             this.updateStatus('🟢 Conectado al servidor', 'success');
+            // Enviar idioma inicial al servidor
+            this.sendLanguageConfig();
         };
 
         this.ws.onmessage = (event) => {

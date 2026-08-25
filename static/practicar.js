@@ -23,6 +23,7 @@ class PracticeApp {
         this.languageNotes = {
             es: 'ℹ️ <strong>Precisión de Whisper en Español:</strong> <strong>Muy Alta (~95%+)</strong>. Excelente reconocimiento fonético y sintáctico.',
             en: 'ℹ️ <strong>Precisión de Whisper en Inglés:</strong> <strong>Excelente (~97%+)</strong>. Máxima precisión por volumen de entrenamiento en el modelo.',
+            pt: 'ℹ️ <strong>Precisión de Whisper en Portugués (Brasil):</strong> <strong>Muy Alta (~93%+)</strong>. Gran reconocimiento del acento brasileiro y variaciones regionales.',
             zh: 'ℹ️ <strong>Precisión de Whisper en Chino Mandarín:</strong> <strong>Alta (~88% - 92%)</strong>. Buena detección; procura vocalizar tonos claramente.',
             ru: 'ℹ️ <strong>Precisión de Whisper en Ruso:</strong> <strong>Buena (~91% - 94%)</strong>. Reconocimiento sólido en alfabeto cirílico y consonantes complejas.'
         };
@@ -153,13 +154,32 @@ class PracticeApp {
                 mimeType: this.getSupportedMimeType()
             });
 
+            // Acumulamos los chunks y enviamos un WebM completo al parar.
+            // Enviar chunks parciales con start(1000) rompe el header EBML
+            // y FFmpeg no puede parsear los fragmentos intermedios.
+            const audioChunks = [];
+
             this.mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0 && this.ws && this.ws.readyState === WebSocket.OPEN) {
-                    this.ws.send(event.data);
+                if (event.data.size > 0) {
+                    audioChunks.push(event.data);
                 }
             };
 
-            this.mediaRecorder.start(1000); // Enviar chunks de 1 seg
+            this.mediaRecorder.onstop = () => {
+                const mimeType = this.getSupportedMimeType() || 'audio/webm';
+                const audioBlob = new Blob(audioChunks, { type: mimeType });
+                console.log(`📤 Enviando grabación completa: ${audioBlob.size} bytes`);
+                if (audioBlob.size > 5000 && this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    audioBlob.arrayBuffer().then(buffer => {
+                        this.ws.send(buffer);
+                        console.log('✅ Audio enviado al servidor para transcripción');
+                    }).catch(err => console.error('❌ Error enviando audio:', err));
+                } else {
+                    console.warn('⚠️ Grabación demasiado corta o WebSocket desconectado');
+                }
+            };
+
+            this.mediaRecorder.start(); // Sin timeslice → graba todo hasta stop()
             this.isRecording = true;
             this.startTime = Date.now();
 
