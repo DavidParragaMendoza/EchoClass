@@ -12,8 +12,13 @@
  *
  * Mientras no tengas el pod activo, deja los valores con
  * "REEMPLAZAR" — la app mostrará un error claro de conexión.
- */
+ 
 window.ECHOCLASS_CONFIG = {
   serverUrl: "https://e2fe3do06ya5xt-8000.proxy.runpod.net",
   wsUrl:     "wss://e2fe3do06ya5xt-8000.proxy.runpod.net"
+};
+*/
+window.ECHOCLASS_CONFIG = {
+  serverUrl: "https://py2uijg7jgv3k9-8000.proxy.runpod.net",
+  wsUrl:     "wss://py2uijg7jgv3k9-8000.proxy.runpod.net/ws"
 };
