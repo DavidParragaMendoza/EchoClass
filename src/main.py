@@ -41,6 +41,20 @@ async def lifespan(app: FastAPI):
     logger.info("✅ EchoClass cerrado")
 
 
+class SPAStaticFiles(StaticFiles):
+    """
+    StaticFiles que ignora conexiones WebSocket.
+    Sin esto, el mount en '/' intercepta los upgrades WS
+    y lanza AssertionError porque StaticFiles solo acepta HTTP.
+    """
+    async def __call__(self, scope, receive, send):
+        if scope["type"] == "websocket":
+            # Dejar que FastAPI maneje los WebSockets por sus rutas propias
+            from starlette.responses import Response
+            return await Response(status_code=404)(scope, receive, send)
+        await super().__call__(scope, receive, send)
+
+
 def create_app() -> FastAPI:
     """
     Crea y configura la aplicación FastAPI.
@@ -67,14 +81,14 @@ def create_app() -> FastAPI:
     # Rutas API
     app.include_router(api_router)
     
-    # WebSocket
+    # WebSocket — deben registrarse ANTES del mount de StaticFiles
     app.websocket("/ws")(websocket_endpoint)
     app.websocket("/ws/transcribe")(websocket_endpoint)
     
-    # Archivos estáticos (frontend)
+    # Archivos estáticos (frontend) — montado al final para no interceptar /ws
     static_path = Path(__file__).parent.parent / "static"
     if static_path.exists():
-        app.mount("/", StaticFiles(directory=str(static_path), html=True), name="static")
+        app.mount("/", SPAStaticFiles(directory=str(static_path), html=True), name="static")
         logger.info(f"📁 Frontend montado desde: {static_path}")
     else:
         logger.warning(f"⚠️ Directorio static no encontrado: {static_path}")
