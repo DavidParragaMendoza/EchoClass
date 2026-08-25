@@ -17,7 +17,7 @@ class TranscriptionApp {
             : window.location.origin;
         this.WS_URL = (_cfg.wsUrl || '')
             ? _cfg.wsUrl.replace(/\/+$/, '')
-            : (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host;
+            : (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws';
         this.currentMode = null;
         this.RECORDING_DURATION = 5000; // ms por chunk de audio enviado a Whisper (5 segundos)
         

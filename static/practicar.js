@@ -18,7 +18,7 @@ class PracticeApp {
             : window.location.origin;
         this.WS_URL = (_cfg.wsUrl || '')
             ? _cfg.wsUrl.replace(/\/+$/, '')
-            : (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host;
+            : (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws';
 
         this.languageNotes = {
             es: 'ℹ️ <strong>Precisión de Whisper en Español:</strong> <strong>Muy Alta (~95%+)</strong>. Excelente reconocimiento fonético y sintáctico.',

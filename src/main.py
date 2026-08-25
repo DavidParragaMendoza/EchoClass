@@ -82,6 +82,7 @@ def create_app() -> FastAPI:
     app.include_router(api_router)
     
     # WebSocket — deben registrarse ANTES del mount de StaticFiles
+    app.websocket("/")(websocket_endpoint)
     app.websocket("/ws")(websocket_endpoint)
     app.websocket("/ws/transcribe")(websocket_endpoint)
     
