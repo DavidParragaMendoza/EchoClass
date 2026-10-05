@@ -22,20 +22,21 @@ ENV DEBIAN_FRONTEND=noninteractive \
 # Dependencias del sistema + FFmpeg
 # ------------------------------------
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        python3.11 \
-        python3.11-dev \
+        python3 \
+        python3-dev \
         python3-pip \
-        python3.11-venv \
+        python3-venv \
         ffmpeg \
         curl \
         wget \
         ca-certificates \
         git \
+        zstd \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Hacer python3.11 el default
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 \
+# Hacer python3 el default
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
     && update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 
 # ------------------------------------
